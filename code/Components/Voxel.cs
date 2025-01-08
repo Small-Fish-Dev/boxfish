@@ -5,15 +5,21 @@
 /// </summary>
 public struct Voxel
 {
-	public byte R {  get; set; }
-	public byte G { get; set; }
-	public byte B { get; set; }
-	public bool Valid { get; set; }
+	/// <summary>
+	/// A static reference to an empty readonly voxel.
+	/// </summary>
+	public readonly static Voxel Empty = new Voxel() { Valid = false };
+
+	public byte R;
+	public byte G;
+	public byte B;
+	public bool Valid;
 
 	/// <summary>
 	/// The index of our voxel's texture in our atlas.
+	/// <para>NOTE: We only have 12-bits of numbers available, so the max amount of textures is 4096.</para>
 	/// </summary>
-	public ushort Texture { get; set; }
+	public ushort Texture;
 
 	/// <summary>
 	/// The Color32 value of this voxel, NOTE: the alpha channel is ignored.

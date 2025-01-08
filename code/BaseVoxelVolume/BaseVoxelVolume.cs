@@ -10,12 +10,6 @@ public abstract partial class BaseVoxelVolume<T>
 	: Component where T : struct
 {
 	/// <summary>
-	/// Our container of chunks in this volume.
-	/// </summary>
-	public IReadOnlyDictionary<Vector3Int, Chunk<T>> Chunks => _chunks;
-	internal readonly Dictionary<Vector3Int, Chunk<T>> _chunks = new();
-
-	/// <summary>
 	/// Scale of our voxels.
 	/// </summary>
 	public abstract float Scale { get; }

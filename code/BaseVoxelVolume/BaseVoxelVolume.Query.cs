@@ -11,7 +11,7 @@ public abstract partial class BaseVoxelVolume<T>
 		public bool HasVoxel;
 		public Vector3Int LocalPosition;
 		public Vector3Int GlobalPosition;
-		public Chunk<T> Chunk;
+		public Chunk Chunk;
 	}
 
 	/// <summary>
@@ -49,7 +49,7 @@ public abstract partial class BaseVoxelVolume<T>
 	/// <param name="chunk"></param>
 	/// <param name="relative"></param>
 	/// <returns></returns>
-	public Vector3Int GetLocalSpace( int x, int y, int z, out Chunk<T> chunk, Chunk<T> relative = null )
+	public Vector3Int GetLocalSpace( int x, int y, int z, out Chunk chunk, Chunk relative = null )
 	{
 		var position = new Vector3Int(
 			((float)(x + (relative?.X ?? 0) * VoxelUtils.CHUNK_SIZE) / VoxelUtils.CHUNK_SIZE).FloorToInt(),
@@ -76,7 +76,7 @@ public abstract partial class BaseVoxelVolume<T>
 	/// <param name="z"></param>
 	/// <param name="relative"></param>
 	/// <returns></returns>
-	public static Vector3Int GetGlobalSpace( byte x, byte y, byte z, Chunk<T> relative )
+	public static Vector3Int GetGlobalSpace( byte x, byte y, byte z, Chunk relative )
 	{
 		return new Vector3Int(
 			x + (relative?.X ?? 0) * VoxelUtils.CHUNK_SIZE,
@@ -93,7 +93,7 @@ public abstract partial class BaseVoxelVolume<T>
 	/// <param name="z"></param>
 	/// <param name="relative"></param>
 	/// <returns></returns>
-	public VoxelQueryData Query( int x, int y, int z, Chunk<T> relative = null )
+	public VoxelQueryData Query( int x, int y, int z, Chunk relative = null )
 	{
 		// Get the new chunk's position based on the offset.
 		var position = new Vector3Int(
@@ -103,7 +103,7 @@ public abstract partial class BaseVoxelVolume<T>
 		);
 
 		// Calculate new voxel position.
-		var chunk = (Chunk<T>)null;
+		var chunk = (Chunk)null;
 		_ = Chunks?.TryGetValue( position, out chunk );
 
 		var vx = (byte)((x % VoxelUtils.CHUNK_SIZE + VoxelUtils.CHUNK_SIZE) % VoxelUtils.CHUNK_SIZE);
@@ -125,7 +125,7 @@ public abstract partial class BaseVoxelVolume<T>
 		};
 	}
 
-	/// <inheritdoc cref="Query( int, int, int, Chunk{T} )"/>
-	public VoxelQueryData Query( Vector3Int offset, Chunk<T> relative = null )
+	/// <inheritdoc cref="Query( int, int, int, Chunk )"/>
+	public VoxelQueryData Query( Vector3Int offset, Chunk relative = null )
 		=> Query( offset.x, offset.y, offset.z, relative );
 }

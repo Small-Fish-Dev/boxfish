@@ -64,7 +64,7 @@ public static class AmbientOcclusion
 		}
 	};
 
-	private static int Occlusion<T>( Chunk<T> chunk, Vector3Int localPos, int x, int y, int z )
+	private static int Occlusion<T>( BaseVoxelVolume<T>.Chunk chunk, Vector3Int localPos, int x, int y, int z )
 		where T : struct
 	{
 		if ( chunk.RelativeQuery( localPos.x + x, localPos.y + z, localPos.z + y ).HasVoxel )
@@ -81,7 +81,7 @@ public static class AmbientOcclusion
 	/// <param name="face"></param>
 	/// <param name="vertex"></param>
 	/// <returns>A value between 0 and 3 determining the ambient occlusion strength for a vertex.</returns>
-	public static byte Fetch<T>( Chunk<T> chunk, Vector3Int localPos, int face, int vertex ) 
+	public static byte Fetch<T>( BaseVoxelVolume<T>.Chunk chunk, Vector3Int localPos, int face, int vertex ) 
 		where T : struct
 	{
 		if ( !_aoTable.TryGetValue( face, out var values ) )
