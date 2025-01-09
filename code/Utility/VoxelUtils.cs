@@ -1,5 +1,15 @@
 ﻿namespace Boxfish.Utility;
 
+public enum FacesEnum : byte
+{
+	Up = 0,
+	Down = 1, 
+	Backward = 2,
+	Left = 3,
+	Forward = 4,
+	Right = 5
+}
+
 /// <summary>
 /// A static class containing constants and other utility.
 /// </summary>
