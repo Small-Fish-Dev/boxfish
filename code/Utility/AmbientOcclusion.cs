@@ -13,8 +13,8 @@ public static class AmbientOcclusion
 		[0] = new()
 		{
 			new (sbyte, sbyte, sbyte)[3] { (0, 1, -1), (-1, 1, 0), (-1, 1, -1) },
-			new (sbyte, sbyte, sbyte)[3] { (0, 1, 1), (1, 1, 0), (1, 1, 1) },
 			new (sbyte, sbyte, sbyte)[3] { (0, 1, 1), (-1, 1, 0), (-1, 1, 1) },
+			new (sbyte, sbyte, sbyte)[3] { (0, 1, 1), (1, 1, 0), (1, 1, 1) },
 			new (sbyte, sbyte, sbyte)[3] { (0, 1, -1), (1, 1, 0), (1, 1, -1) }
 		},
 
@@ -22,26 +22,26 @@ public static class AmbientOcclusion
 		[1] = new()
 		{
 			new (sbyte, sbyte, sbyte)[3] { (0, -1, -1), (1, -1, 0), (1, -1, -1) },
-			new (sbyte, sbyte, sbyte)[3] { (0, -1, 1), (-1, -1, 0), (-1, -1, 1) },
 			new (sbyte, sbyte, sbyte)[3] { (0, -1, 1), (1, -1, 0), (1, -1, 1) },
-			new (sbyte, sbyte, sbyte)[3] { (0, -1, -1), (-1, -1, 0), (-1, -1, -1) },
+			new (sbyte, sbyte, sbyte)[3] { (0, -1, 1), (-1, -1, 0), (-1, -1, 1) },
+			new (sbyte, sbyte, sbyte)[3] { (0, -1, -1), (-1, -1, 0), (-1, -1, -1) }
 		},
 
 		// -x
 		[2] = new()
 		{
 			new (sbyte, sbyte, sbyte)[3] { (-1, 0, -1), (-1, 1, 0), (-1, 1, -1) },
-			new (sbyte, sbyte, sbyte)[3] { (-1, 0, 1), (-1, -1, 0), (-1, -1, 1) },
 			new (sbyte, sbyte, sbyte)[3] { (-1, 0, -1), (-1, -1, 0), (-1, -1, -1) },
-			new (sbyte, sbyte, sbyte)[3] { (-1, 0, 1), (-1, 1, 0), (-1, 1, 1) },
+			new (sbyte, sbyte, sbyte)[3] { (-1, 0, 1), (-1, -1, 0), (-1, -1, 1) },
+			new (sbyte, sbyte, sbyte)[3] { (-1, 0, 1), (-1, 1, 0), (-1, 1, 1) }
 		},
 
 		// +y
 		[3] = new()
 		{
 			new (sbyte, sbyte, sbyte)[3] { (-1, 0, 1), (0, 1, 1), (-1, 1, 1) },
-			new (sbyte, sbyte, sbyte)[3] { (1, 0, 1), (0, -1, 1), (1, -1, 1) },
 			new (sbyte, sbyte, sbyte)[3] { (-1, 0, 1), (0, -1, 1), (-1, -1, 1) },
+			new (sbyte, sbyte, sbyte)[3] { (1, 0, 1), (0, -1, 1), (1, -1, 1) },
 			new (sbyte, sbyte, sbyte)[3] { (1, 0, 1), (0, 1, 1), (1, 1, 1) }
 		},
 
@@ -49,17 +49,17 @@ public static class AmbientOcclusion
 		[4] = new()
 		{
 			new (sbyte, sbyte, sbyte)[3] { (1, 0, 1), (1, 1, 0), (1, 1, 1) },
-			new (sbyte, sbyte, sbyte)[3] { (1, 0, -1), (1, -1, 0), (1, -1, -1) },
 			new (sbyte, sbyte, sbyte)[3] { (1, 0, 1), (1, -1, 0), (1, -1, 1) },
-			new (sbyte, sbyte, sbyte)[3] { (1, 0, -1), (1, 1, 0), (1, 1, -1) },
+			new (sbyte, sbyte, sbyte)[3] { (1, 0, -1), (1, -1, 0), (1, -1, -1) },
+			new (sbyte, sbyte, sbyte)[3] { (1, 0, -1), (1, 1, 0), (1, 1, -1) }
 		},
 
 		// -y
 		[5] = new()
 		{
 			new (sbyte, sbyte, sbyte)[3] { (1, 0, -1), (0, 1, -1), (1, 1, -1) },
-			new (sbyte, sbyte, sbyte)[3] { (-1, 0, -1), (0, -1, -1), (-1, -1, -1) },
 			new (sbyte, sbyte, sbyte)[3] { (1, 0, -1), (0, -1, -1), (1, -1, -1) },
+			new (sbyte, sbyte, sbyte)[3] { (-1, 0, -1), (0, -1, -1), (-1, -1, -1) },
 			new (sbyte, sbyte, sbyte)[3] { (-1, 0, -1), (0, 1, -1), (-1, 1, -1) }
 		}
 	};
