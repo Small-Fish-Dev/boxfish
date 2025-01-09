@@ -18,10 +18,10 @@ public struct VoxelVertex
 	// A = 8 bits (not used, for now)
 	private readonly uint data2;
 
-	public static readonly VertexAttribute[] Layout = new VertexAttribute[1]
-	{
-		new VertexAttribute( VertexAttributeType.TexCoord, VertexAttributeFormat.UInt32, 3, 10 ),
-	};
+	public static readonly VertexAttribute[] Layout = 
+	[
+		new VertexAttribute( VertexAttributeType.TexCoord, VertexAttributeFormat.UInt32, 2, 10 ),
+	];
 
 	public VoxelVertex( byte x, byte y, byte z, byte vertex, byte face, byte ao, Voxel voxel )
 	{

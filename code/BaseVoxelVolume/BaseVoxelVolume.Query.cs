@@ -1,11 +1,11 @@
 ﻿namespace Boxfish;
 
-public abstract partial class BaseVoxelVolume<T>
+public abstract partial class BaseVoxelVolume<T, U>
 {
 	/// <summary>
 	/// The result of queries giving information about a voxel, it's position, etc.. 
 	/// </summary>
-	public ref struct VoxelQueryData
+	public struct VoxelQueryData
 	{
 		public T Voxel;
 		public bool HasVoxel;

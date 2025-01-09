@@ -1,12 +1,20 @@
 ﻿namespace Boxfish;
 
-partial class BaseVoxelVolume<T>
+partial class BaseVoxelVolume<T, U>
 {
 	/// <summary>
 	/// Our container of chunks in this volume.
 	/// </summary>
 	public IReadOnlyDictionary<Vector3Int, Chunk> Chunks => _chunks;
-	internal readonly Dictionary<Vector3Int, Chunk> _chunks = new();
+	internal Dictionary<Vector3Int, Chunk> _chunks = new();
+
+	/// <summary>
+	/// Call this method to override the chunks of this voxel volume.
+	/// </summary>
+	public void SetChunks( Dictionary<Vector3Int, Chunk> dictionary )
+	{
+		_chunks = dictionary;
+	}
 
 	/// <summary>
 	/// Our chunk structure, contains a 3-dimensional array of voxels.
@@ -19,22 +27,23 @@ partial class BaseVoxelVolume<T>
 		public int X { get; }
 		public int Y { get; }
 		public int Z { get; }
-		public Vector3Int Position => new( X, Y, X );
+		public Vector3Int Position => new( X, Y, Z );
 
 		internal bool Empty { get; set; }
 
-		private BaseVoxelVolume<T> _volume;
+		private BaseVoxelVolume<T, U> _volume;
 		private T[] _voxels;
 
-		private Dictionary<Vector3Int, Chunk> Chunks => _volume._chunks;
+		private Dictionary<Vector3Int, Chunk> _chunks;
 
-		public Chunk( int x, int y, int z, BaseVoxelVolume<T> volume = null )
+		public Chunk( int x, int y, int z, BaseVoxelVolume<T, U> volume = null )
 		{
 			X = x;
 			Y = y;
 			Z = z;
 
 			_volume = volume;
+			_chunks = volume._chunks;
 			_voxels = new T[CHUNK_SIZE_P3];
 		}
 
@@ -48,13 +57,19 @@ partial class BaseVoxelVolume<T>
 		public int Flatten( byte x, byte y, byte z )
 			=> x + y * VoxelUtils.CHUNK_SIZE + z * CHUNK_SIZE_P2;
 
+		public void SetParent( BaseVoxelVolume<T, U> volume )
+		{
+			_volume = volume;
+			_chunks = volume._chunks;
+		}
+
 		public T GetVoxel( byte x, byte y, byte z )
 			=> _voxels[Flatten( x, y, z )];
 
 		public T[] GetVoxels() => _voxels;
 
-		/// <inheritdoc cref="BaseVoxelVolume{T}.Query(int, int, int, BaseVoxelVolume{T}.Chunk)"/>
-		public BaseVoxelVolume<T>.VoxelQueryData RelativeQuery( int x, int y, int z )
+		/// <inheritdoc cref="BaseVoxelVolume{T, U}.Query(int, int, int, BaseVoxelVolume{T, U}.Chunk)"/>
+		public VoxelQueryData RelativeQuery( int x, int y, int z )
 			=> _volume.Query( x, y, z, this );
 
 		/// <summary>
@@ -95,7 +110,7 @@ partial class BaseVoxelVolume<T>
 			foreach ( var direction in neighbors )
 			{
 				// Check if we should include the neighbor.
-				if ( Chunks.TryGetValue( Position + direction, out var result )
+				if ( _chunks.TryGetValue( Position + direction, out var result )
 				 && ((direction.x == 1 && x >= VoxelUtils.CHUNK_SIZE - 1) || (direction.x == -1 && x <= 0)
 				  || (direction.y == 1 && y >= VoxelUtils.CHUNK_SIZE - 1) || (direction.y == -1 && y <= 0)
 				  || (direction.z == 1 && z >= VoxelUtils.CHUNK_SIZE - 1) || (direction.z == -1 && z <= 0)) )
@@ -115,7 +130,7 @@ partial class BaseVoxelVolume<T>
 			// Get corner for refreshing AO aswell :D
 			var directions = new Vector3Int( GetBorderDirection( x ), GetBorderDirection( y ), GetBorderDirection( z ) );
 			var corner = Position + directions;
-			if ( !corner.Equals( Position ) && Chunks.TryGetValue( corner, out var chunk ) )
+			if ( !corner.Equals( Position ) && _chunks.TryGetValue( corner, out var chunk ) )
 				yield return chunk;
 		}
 

@@ -1,4 +1,4 @@
-﻿namespace Boxfish;
+﻿namespace Boxfish.Utility;
 
 /// <summary>
 /// A static class containing constants and other utility.

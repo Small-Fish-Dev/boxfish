@@ -40,7 +40,7 @@ public struct Voxel
 		Valid = true;
 	}
 
-	public Voxel( Color32 color, ushort texture ) :	this()
+	public Voxel( Color32 color, ushort texture = 0 ) :	this()
 	{
 		Color = color;
 		Texture = texture;
