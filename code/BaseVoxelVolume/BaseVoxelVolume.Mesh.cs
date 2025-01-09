@@ -3,6 +3,12 @@
 partial class BaseVoxelVolume<T, U>
 {
 	/// <summary>
+	/// Should we ignore out of bounds faces? 
+	/// <para>NOTE: This does not affect the +Z faces.</para>
+	/// </summary>
+	public virtual bool IgnoreOOBFaces { get; } = true;
+
+	/// <summary>
 	/// Shrimple structure containing voxel mesh information such as vertices.
 	/// </summary>
 	protected struct VoxelMesh
@@ -127,11 +133,16 @@ partial class BaseVoxelVolume<T, U>
 
 					// Build vertices.
 					var drawCount = 0;
+					var isOpaque = IsOpaqueVoxel( voxel );
 					for ( var i = 0; i < 6; i++ )
 					{
 						var direction = VoxelUtils.Directions[i];
 						var neighbour = Query( position.x + direction.x, position.y + direction.y, position.z + direction.z, chunk );
-						if ( neighbour.HasVoxel )
+						
+						var ignoreFace = IgnoreOOBFaces && neighbour.Chunk == null && direction.z != 1;
+						var shouldDraw = !isOpaque && IsOpaqueVoxel( neighbour.Voxel );
+
+						if ( (neighbour.HasVoxel && !shouldDraw) || ignoreFace )
 							continue;
 
 						for ( var j = 0; j < 4; ++j )

@@ -38,6 +38,13 @@ public abstract partial class BaseVoxelVolume<T, U> : Component
 	/// <returns></returns>
 	public abstract bool IsValidVoxel( T voxel );
 
+	/// <summary>
+	/// We need this to determine the if this voxel opaque or not, for rendering non-opaque voxels that are directly behind opaque voxels. 
+	/// </summary>
+	/// <param name="voxel"></param>
+	/// <returns></returns>
+	public virtual bool IsOpaqueVoxel( T voxel ) => false;
+
 	protected override void OnEnabled()
 	{
 		if ( !_chunks.Any() ) return;
