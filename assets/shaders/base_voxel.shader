@@ -9,7 +9,6 @@ MODES
 
 	Depth( S_MODE_DEPTH );
 
-	ToolsVis( S_MODE_TOOLS_VIS );
 	ToolsWireframe( "vr_tools_wireframe.shader" );
 	ToolsShadingComplexity( "tools_shading_complexity.shader" );
 }
@@ -45,7 +44,7 @@ VS
 {
 	#include "common/vertex.hlsl"
     #include "lib/voxel_utils.hlsl"
-    
+
     PixelInput MainVs( VertexInput i )
 	{
         // Turn our 32-bit unsigned integers back to the actual data.
@@ -87,7 +86,7 @@ PS
 
     #include "common/pixel.hlsl"
     
-    CreateTexture2DArray( g_tAlbedo ) < Attribute( "Albedo" ); SrgbRead( true ); Filter( MIN_MAG_MIP_POINT ); AddressU( CLAMP ); AddressV( CLAMP ); > ;    
+    CreateTexture2DArray( g_tAlbedo ) < Attribute( "VoxelAtlas" ); SrgbRead( true ); Filter( MIN_MAG_MIP_POINT ); AddressU( CLAMP ); AddressV( CLAMP ); > ;    
 
     SamplerState g_sSampler < Filter( POINT ); AddressU( CLAMP ); AddressV( CLAMP ); >;
 
@@ -98,18 +97,18 @@ PS
 
     float4 MainPs( PixelInput i ) : SV_Target0
 	{   
-        //float4 albedo = Tex2DArrayS( g_tAlbedo, g_sSampler, i.vTexCoord.xyz ).rgba;
+        float4 albedo = Tex2DArrayS( g_tAlbedo, g_sSampler, i.vTexCoord.xyz ).rgba;
         //float3 rae = Tex2DArrayS( g_tRAE, g_sSampler, i.vTexCoord.xyz ).rgb;
 
         Material m = Material::Init();
-        m.Albedo = i.vColor.rgb * i.fOcclusion;//albedo.rgb * i.vColor.rgb * i.fOcclusion;
+        m.Albedo = albedo.rgb * i.vColor.rgb * i.fOcclusion;
         m.Normal = i.vNormal;
-        m.Roughness = 1; //rae.r;
+        m.Roughness = 1;
 		m.Metalness = 0;
 		m.AmbientOcclusion = 1;
 		m.TintMask = 1;
-		m.Opacity = 1; //1.0f - rae.g;
-		m.Emission = 0; //(m.Albedo * rae.b) * ( ( sin( g_flTime ) * 0.5 + 0.8 ) * 4 ); 
+		m.Opacity = albedo.a;
+		m.Emission = 0;
 		m.Transmission = 0;
         
         return ShadingModelStandard::Shade( i, m );

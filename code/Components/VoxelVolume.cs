@@ -4,10 +4,17 @@
 /// Example voxel volume component.
 /// <para>If you want more freedom, see <see cref="BaseVoxelVolume{T, U}"/> instead.</para>
 /// </summary>
-[Icon( "view_in_ar" )]
+[Icon( "view_in_ar" ), Category( "Boxfish" )]
 public class VoxelVolume
 	: BaseVoxelVolume<Voxel, VoxelVertex>
 {
+	/// <summary>
+	/// The reference to our atlas.
+	/// </summary>
+	[Property, Category( "Appearance" )]
+	public AtlasResource Atlas { get; set; } 
+		= ResourceLibrary.Get<AtlasResource>( "resources/base.voxatlas" );
+
 	/// <summary>
 	/// The scale of our voxels in inches.
 	/// <para>Defaulted to 1 meter.</para>
@@ -16,7 +23,8 @@ public class VoxelVolume
 	public float VoxelScale { get; set; } = 1f / 0.0254f;
 
 	#region Abstract class implementation
-	public override Material Material => Material.FromShader( "shaders/base_voxel.shader" );
+	private Material _material = Material.FromShader( "shaders/base_voxel.shader" );
+	public override Material Material => _material;
 
 	public override float Scale => VoxelScale;
 
@@ -28,11 +36,31 @@ public class VoxelVolume
 		=> new VoxelVertex( (byte)position.x, (byte)position.y, (byte)position.z, (byte)vertexIndex, (byte)face, (byte)ao, voxel );
 
 	public override bool IsValidVoxel( Voxel voxel ) => voxel.Valid;
+
+	public override bool IsOpaqueVoxel( Voxel voxel )
+	{
+		if ( Atlas == null ) return false;
+		if ( Atlas.TryGet( voxel.Texture, out var item ) )
+			return item.Opaque;
+
+		return false;
+	}
 	#endregion
+
+	protected override void OnUpdate()
+	{
+		base.OnUpdate();
+
+		// Set some render attributes.
+		Scene.RenderAttributes.Set( "VoxelScale", VoxelScale );
+		Scene.RenderAttributes.Set( "VoxelAtlas", Atlas.Texture );
+	}
 
 	protected override void OnStart()
 	{
 		base.OnStart();
+
+		Atlas?.Build();
 
 		// some funky testing :D
 		GameTask.RunInThreadAsync( async () => {
@@ -46,11 +74,15 @@ public class VoxelVolume
 					for ( byte j = 0; j < VoxelUtils.CHUNK_SIZE; j++ )
 					{
 						var noise = Sandbox.Utility.Noise.Perlin( x * VoxelUtils.CHUNK_SIZE + i, y * VoxelUtils.CHUNK_SIZE + j );
-						var height = (int)(noise * VoxelUtils.CHUNK_SIZE - 1);
+						var height = Math.Clamp( (int)(MathF.Pow( noise * VoxelUtils.CHUNK_SIZE, 2f ) - VoxelUtils.CHUNK_SIZE * 2), 1, VoxelUtils.CHUNK_SIZE );
 
 						for ( byte k = 0; k < height; k++ )
 						{
-							chunk.SetVoxel( i, j, k, new Voxel( Game.Random.Color().ToColor32() ) );
+							const ushort GRASS = 1;
+							const ushort DIRT = 2;
+							var tex = k >= height - 1 ? GRASS : DIRT;
+
+							chunk.SetVoxel( i, j, k, new Voxel( Color32.White, tex ) );
 						}
 					}
 

@@ -1,0 +1,56 @@
+{
+  "RegionAtlas": "resources/base-atlas.png",
+  "Size": "32,32",
+  "_items": [
+    {
+      "Name": "Blank",
+      "UseRegion": true,
+      "Texture": "resources/base-atlas.png",
+      "Region": {
+        "Position": "0,0",
+        "Size": "32,32"
+      },
+      "Opaque": false,
+      "OnBlockPlaced": null,
+      "OnBlockBroken": null
+    },
+    {
+      "Name": "Grass",
+      "UseRegion": true,
+      "Texture": null,
+      "Region": {
+        "Position": "0,32",
+        "Size": "192,32"
+      },
+      "Opaque": false,
+      "OnBlockPlaced": null,
+      "OnBlockBroken": null
+    },
+    {
+      "Name": "Dirt",
+      "UseRegion": true,
+      "Texture": null,
+      "Region": {
+        "Position": "0,64",
+        "Size": "192,32"
+      },
+      "Opaque": false,
+      "OnBlockPlaced": null,
+      "OnBlockBroken": null
+    },
+    {
+      "Name": "Leaves",
+      "UseRegion": true,
+      "Texture": null,
+      "Region": {
+        "Position": "0,96",
+        "Size": "192,32"
+      },
+      "Opaque": true,
+      "OnBlockPlaced": null,
+      "OnBlockBroken": null
+    }
+  ],
+  "__references": [],
+  "__version": 0
+}

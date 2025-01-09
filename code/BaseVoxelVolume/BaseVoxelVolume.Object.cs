@@ -13,7 +13,7 @@ partial class BaseVoxelVolume<T, U>
 	{
 		if ( chunk == null )
 		{
-			Log.Error( $"Tried to get ChunkObject of null Chunk?" );
+			Logger.Error( $"Tried to get ChunkObject of null Chunk?" );
 			return null;
 		}
 
@@ -53,23 +53,18 @@ partial class BaseVoxelVolume<T, U>
 		public PhysicsBody Body { get; private set; }
 		public PhysicsShape Shape { get; private set; }
 
-		~ChunkObject()
-		{
-			Destroy();
-		}
-
 		public void Rebuild( Model model, bool physics = true )
 		{
 			if ( !Parent.IsValid() )
 			{
-				Log.Error( $"No parent for ChunkObject found?" );
+				Logger.Error( $"No parent for ChunkObject found?" );
 				return;
 			}
 
 			var scene = Parent.Scene;
 			if ( !scene.IsValid() )
 			{
-				Log.Error( $"No scene for ChunkObject found?" );
+				Logger.Error( $"No scene for ChunkObject found?" );
 				return;
 			}
 
@@ -105,7 +100,6 @@ partial class BaseVoxelVolume<T, U>
 
 			// SceneObject for rendering.
 			SceneObject.Batchable = true;
-			SceneObject.Attributes.Set( "VoxelScale", Parent.Scale );
 			SceneObject.Model = model;
 			SceneObject.Position = position;
 			SceneObject.SetComponentSource( Parent );
