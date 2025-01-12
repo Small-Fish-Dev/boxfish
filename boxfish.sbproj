@@ -1,7 +1,7 @@
 {
   "Title": "Boxfish",
   "Type": "library",
-  "Org": "local",
+  "Org": "fish",
   "Ident": "boxfish",
   "Schema": 1,
   "IncludeSourceFiles": false,
