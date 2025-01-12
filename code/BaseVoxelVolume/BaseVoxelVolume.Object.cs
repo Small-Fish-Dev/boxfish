@@ -1,6 +1,4 @@
-﻿using System.Collections;
-
-namespace Boxfish;
+﻿namespace Boxfish;
 
 partial class BaseVoxelVolume<T, U>
 {
@@ -55,7 +53,8 @@ partial class BaseVoxelVolume<T, U>
 	/// <para>We store a <see cref="Sandbox.SceneObject"/> and a <see cref="Sandbox.PhysicsBody"/> here.</para>
 	/// </summary>
 	protected sealed class ChunkObject
-		: IEquatable<ChunkObject>, IDisposable
+		: IEquatable<ChunkObject>, 
+		  IDisposable
 	{
 		public Vector3 WorldPosition => (Vector3)Position * Parent.Scale * VoxelUtils.CHUNK_SIZE;
 
@@ -77,13 +76,13 @@ partial class BaseVoxelVolume<T, U>
 			if ( !scene.IsValid() )
 			{
 				Logger.Error( $"No scene for ChunkObject found?" );
+				Dispose();
 				return;
 			}
 
 			if ( model == null )
 			{
-				SceneObject?.Delete();
-				Shape?.Remove();
+				Dispose();
 				return;
 			}
 
@@ -111,9 +110,10 @@ partial class BaseVoxelVolume<T, U>
 			}
 
 			// SceneObject for rendering.
+			Parent.SetAttributes( SceneObject.Attributes );
 			SceneObject.Batchable = true;
 			SceneObject.Model = model;
-			SceneObject.Position = position;
+			SceneObject.Position = Position;
 			SceneObject.SetComponentSource( Parent );
 		}
 

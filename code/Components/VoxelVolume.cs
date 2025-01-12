@@ -1,4 +1,4 @@
-﻿namespace Boxfish.Components;
+namespace Boxfish.Components;
 
 /// <summary>
 /// Example voxel volume component.
@@ -47,33 +47,33 @@ public class VoxelVolume
 	}
 	#endregion
 
-	protected override void OnUpdate()
+	public override void SetAttributes( RenderAttributes attributes )
 	{
-		base.OnUpdate();
+		base.SetAttributes( attributes );
 
 		// Set some render attributes.
-		Scene.RenderAttributes.Set( "VoxelScale", VoxelScale );
-		Scene.RenderAttributes.Set( "VoxelAtlas", Atlas.Texture );
+		attributes.Set( "VoxelScale", VoxelScale );
+		attributes.Set( "VoxelAtlas", Atlas.Texture );
 	}
 
-	protected override async Task OnLoad()
+	protected override async void OnStart()
 	{
-		await base.OnLoad();
+		base.OnStart();
 
 		Atlas?.Build();
 
 		// some funky testing :D
 		var chunks = new Dictionary<Vector3Int, VoxelVolume.Chunk>();
-		async Task<Chunk> CreatePerlinChunk( int x, int y )
+		var seed = Game.Random.Int( 0, int.MaxValue - 1 );
+		Chunk CreatePerlinChunk( int x, int y )
 		{
 			var chunk = new Chunk( x, y, 0, this );
-			await Task.WorkerThread();
 
 			for ( byte i = 0; i < VoxelUtils.CHUNK_SIZE; i++ )
 				for ( byte j = 0; j < VoxelUtils.CHUNK_SIZE; j++ )
 				{
-					var noise = Sandbox.Utility.Noise.Perlin( x * VoxelUtils.CHUNK_SIZE + i, y * VoxelUtils.CHUNK_SIZE + j );
-					var height = Math.Clamp( (int)(MathF.Pow( noise * VoxelUtils.CHUNK_SIZE, 2f ) - VoxelUtils.CHUNK_SIZE * 2), 1, VoxelUtils.CHUNK_SIZE );
+					var noise = Sandbox.Utility.Noise.Perlin( x * VoxelUtils.CHUNK_SIZE + i, y * VoxelUtils.CHUNK_SIZE + j, seed );
+					var height = Math.Clamp( noise * VoxelUtils.CHUNK_SIZE, 1, VoxelUtils.CHUNK_SIZE );
 
 					for ( byte k = 0; k < height; k++ )
 					{
@@ -88,16 +88,17 @@ public class VoxelVolume
 			return chunk;
 		}
 
-		await Task.WorkerThread();
-		for ( int x = -8; x < 8; x++ )
-			for ( int y = -8; y < 8; y++ )
+		for ( int x = -2; x < 5; x++ )
+			for ( int y = -2; y < 5; y++ )
 			{
-
-				var chunk = await CreatePerlinChunk( x, y );
+				var chunk = CreatePerlinChunk( x, y );
 				chunks.Add( new Vector3Int( x, y, 0 ), chunk );
 			}
 
-		await Task.MainThread();
+		/*var chunks = await Importer.Create( "voxel/summer_cottage.vox" )
+			.WithColorImporter( col => new Voxel( col ) )
+			.BuildAsync();*/
+
 		SetChunks( chunks );
 		await GenerateMeshes( chunks.Values );
 	}

@@ -65,11 +65,19 @@ VS
             ((i.vData.y >> 24) & 0xFFu)
         ) / 255.0f;
 
-        // Set object space position.
-        i.vPositionOs = (position + Voxel::GetOffset(vertexIndex)) * g_flVoxelScale;
+        // Set local position.
+        float3 localPosition = (position + Voxel::GetOffset(vertexIndex)) * g_flVoxelScale;
+        i.vPositionOs = localPosition;
 
-        // Set our output data.
+        // Process vertex, figure out chunk position and global position.
         PixelInput o = ProcessVertex( i );
+        float3 chunkPosition = o.vPositionWs - localPosition;
+        float3 globalPosition = chunkPosition * 16 * g_flVoxelScale + localPosition;
+
+        o.vPositionPs = Position3WsToPs(globalPosition);
+        o.vPositionWs.xyz = globalPosition;
+
+        // Set some other values.
         o.vNormal = normal;
         o.fOcclusion = ao;
         o.vTexCoord = float3( Voxel::GetUV(vertexIndex, face).xy, textureIndex * 6 + face );
@@ -105,7 +113,7 @@ PS
         m.Normal = i.vNormal;
         m.Roughness = 1;
 		m.Metalness = 0;
-		m.AmbientOcclusion = 1;
+		m.AmbientOcclusion = i.fOcclusion;
 		m.TintMask = 1;
 		m.Opacity = albedo.a;
 		m.Emission = 0;

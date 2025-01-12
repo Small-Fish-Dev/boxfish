@@ -14,6 +14,9 @@ partial class BaseVoxelVolume<T, U>
 	public void SetChunks( Dictionary<Vector3Int, Chunk> dictionary )
 	{
 		_chunks = dictionary;
+
+		foreach ( var (_, chunk) in dictionary )
+			chunk.SetParent( this );
 	}
 
 	/// <summary>
@@ -35,6 +38,16 @@ partial class BaseVoxelVolume<T, U>
 		private T[] _voxels;
 
 		private Dictionary<Vector3Int, Chunk> _chunks;
+
+		public Chunk( int x, int y, int z, Dictionary<Vector3Int, Chunk> chunks = null )
+		{
+			X = x;
+			Y = y;
+			Z = z;
+
+			_chunks = chunks;
+			_voxels = new T[CHUNK_SIZE_P3];
+		}
 
 		public Chunk( int x, int y, int z, BaseVoxelVolume<T, U> volume = null )
 		{
@@ -60,7 +73,6 @@ partial class BaseVoxelVolume<T, U>
 		public void SetParent( BaseVoxelVolume<T, U> volume )
 		{
 			_volume = volume;
-			_chunks = volume._chunks;
 		}
 
 		public T GetVoxel( byte x, byte y, byte z )

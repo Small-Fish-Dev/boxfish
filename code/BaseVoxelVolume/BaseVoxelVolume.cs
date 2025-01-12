@@ -45,6 +45,12 @@ public abstract partial class BaseVoxelVolume<T, U> : Component
 	/// <returns></returns>
 	public virtual bool IsOpaqueVoxel( T voxel ) => false;
 
+	/// <summary>
+	/// This is called for every chunk <see cref="SceneObject"/>'s <see cref="RenderAttributes"/>.
+	/// </summary>
+	/// <param name="attributes"></param>
+	public virtual void SetAttributes( RenderAttributes attributes ) { }
+
 	protected override void OnEnabled()
 	{
 		// if ( !_chunks.Any() ) return;

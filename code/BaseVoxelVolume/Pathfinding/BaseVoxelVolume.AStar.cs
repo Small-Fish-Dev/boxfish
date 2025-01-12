@@ -3,7 +3,7 @@
 partial class BaseVoxelVolume<T, U>
 {
 	/// <summary>
-	/// We store information about A* nodes inside of this class.
+	/// We store information about A* nodes and some utility methods inside of this class.
 	/// </summary>
 	public class AStarNode : IHeapItem<AStarNode>, IEquatable<AStarNode>, IValid
 	{
