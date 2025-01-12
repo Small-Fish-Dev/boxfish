@@ -63,7 +63,7 @@ public class VoxelVolume
 		Atlas?.Build();
 
 		// some funky testing :D
-		var chunks = new Dictionary<Vector3Int, VoxelVolume.Chunk>();
+		/*var chunks = new Dictionary<Vector3Int, VoxelVolume.Chunk>();
 		var seed = Game.Random.Int( 0, int.MaxValue - 1 );
 		Chunk CreatePerlinChunk( int x, int y )
 		{
@@ -93,11 +93,10 @@ public class VoxelVolume
 			{
 				var chunk = CreatePerlinChunk( x, y );
 				chunks.Add( new Vector3Int( x, y, 0 ), chunk );
-			}
+			};*/
 
-		/*var chunks = await Importer.Create( "voxel/summer_cottage.vox" )
-			.WithColorImporter( col => new Voxel( col ) )
-			.BuildAsync();*/
+		var chunks = await VoxelImporter.FromPath( "voxel/summer_cottage.vox" )
+			.BuildAsync<Voxel, VoxelVertex>();
 
 		SetChunks( chunks );
 		await GenerateMeshes( chunks.Values );

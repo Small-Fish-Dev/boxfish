@@ -15,6 +15,9 @@ partial class BaseVoxelVolume<T, U>
 	{
 		_chunks = dictionary;
 
+		if ( dictionary is null )
+			return;
+
 		foreach ( var (_, chunk) in dictionary )
 			chunk.SetParent( this );
 	}

@@ -3,7 +3,7 @@
 /// <summary>
 /// Default voxel struct used for the <see cref="VoxelVolume"/> component.
 /// </summary>
-public struct Voxel
+public struct Voxel : IColorImporter<Voxel>
 {
 	/// <summary>
 	/// A static reference to an empty readonly voxel.
@@ -44,5 +44,11 @@ public struct Voxel
 	{
 		Color = color;
 		Texture = texture;
+	}
+
+	// Importer.
+	Voxel IColorImporter<Voxel>.Create( Color32 color )
+	{
+		return new Voxel( color );
 	}
 }

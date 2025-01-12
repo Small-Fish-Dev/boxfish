@@ -6,6 +6,7 @@
 .vs/*
 .vscode/*
 *.csproj
+*.csproj.user
 obj
 bin
 Properties/*
