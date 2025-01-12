@@ -1,4 +1,6 @@
-﻿namespace Boxfish;
+﻿using System.Collections;
+
+namespace Boxfish;
 
 partial class BaseVoxelVolume<T, U>
 {
@@ -11,20 +13,25 @@ partial class BaseVoxelVolume<T, U>
 	/// <returns></returns>
 	protected ChunkObject GetChunkObject( Chunk chunk )
 	{
-		if ( chunk == null )
+		ICollection collection = _objects;
+
+		lock ( collection.SyncRoot )
 		{
-			Logger.Error( $"Tried to get ChunkObject of null Chunk?" );
-			return null;
-		}
-
-		if ( !_objects.TryGetValue( chunk, out var chunkObject ) )
-			_objects.Add( chunk, chunkObject = new()
+			if ( chunk == null )
 			{
-				Position = chunk.Position,
-				Parent = this
-			} );
+				Logger.Error( $"Tried to get ChunkObject of null Chunk?" );
+				return null;
+			}
 
-		return chunkObject;
+			if ( !_objects.TryGetValue( chunk, out var chunkObject ) )
+				_objects.Add( chunk, chunkObject = new()
+				{
+					Position = chunk.Position,
+					Parent = this
+				} );
+
+			return chunkObject;
+		}
 	}
 
 	/// <summary>
@@ -32,10 +39,15 @@ partial class BaseVoxelVolume<T, U>
 	/// </summary>
 	protected void DestroyObjects()
 	{
-		foreach ( var (_, obj) in _objects )
-			obj?.Destroy();
+		ICollection collection = _objects;
 
-		_objects.Clear();
+		lock ( collection.SyncRoot )
+		{
+			foreach ( var (_, obj) in _objects )
+				obj?.Dispose();
+
+			_objects.Clear();
+		}
 	}
 
 	/// <summary>
@@ -43,7 +55,7 @@ partial class BaseVoxelVolume<T, U>
 	/// <para>We store a <see cref="Sandbox.SceneObject"/> and a <see cref="Sandbox.PhysicsBody"/> here.</para>
 	/// </summary>
 	protected sealed class ChunkObject
-		: IEquatable<ChunkObject>
+		: IEquatable<ChunkObject>, IDisposable
 	{
 		public Vector3 WorldPosition => (Vector3)Position * Parent.Scale * VoxelUtils.CHUNK_SIZE;
 
@@ -105,18 +117,6 @@ partial class BaseVoxelVolume<T, U>
 			SceneObject.SetComponentSource( Parent );
 		}
 
-		public void Destroy()
-		{
-			if ( SceneObject.IsValid() )
-				SceneObject.Delete();
-
-			if ( Shape.IsValid() )
-				Shape.Remove();
-
-			if ( Body.IsValid() )
-				Body.Remove();
-		}
-
 		public bool Equals( ChunkObject other )
 		{
 			return other.Position.Equals( Position );
@@ -131,6 +131,24 @@ partial class BaseVoxelVolume<T, U>
 		public override int GetHashCode()
 		{
 			return Position.GetHashCode();
+		}
+
+		public void Dispose()
+		{
+			if ( SceneObject.IsValid() )
+				SceneObject.Delete();
+
+			SceneObject = null;
+
+			if ( Shape.IsValid() )
+				Shape.Remove();
+
+			Shape = null;
+
+			if ( Body.IsValid() )
+				Body.Remove();
+
+			Body = null;
 		}
 	}
 }

@@ -77,7 +77,8 @@ partial class BaseVoxelVolume<T, U>
 	{
 		if ( chunk == null 
 		  || Chunks == null 
-		  || !Scene.IsValid() ) return;
+		  || !this.IsValid()
+		  || !Task.IsValid ) return;
 
 		await Task.MainThread();
 		var chunkObject = !Scene.IsEditor ? GetChunkObject( chunk ) : null;
@@ -167,8 +168,6 @@ partial class BaseVoxelVolume<T, U>
 					voxelMesh.Offset += 4 * drawCount;
 				}
 
-		await Task.MainThread();
-
 		// Check if we actually end up with vertices.
 		if ( !chunk.Empty )
 		{
@@ -207,7 +206,6 @@ partial class BaseVoxelVolume<T, U>
 			if ( physics )
 				builder = builder.AddCollisionMesh( collisionBuffer.Vertices.ToArray(), collisionBuffer.Indices.ToArray() );
 			
-			await GameTask.WorkerThread();
 			chunkObject.Rebuild( builder.Create(), physics );
 
 			return;
@@ -215,12 +213,13 @@ partial class BaseVoxelVolume<T, U>
 
 		// Remove the Gizmo chunk.
 		//else if ( voxelChunk == null && _gizmoCache.ContainsKey( chunk.Position ) )
-			//_gizmoCache.Remove( chunk.Position );
+		//_gizmoCache.Remove( chunk.Position );
 
 		// Let's remove our empty chunk!
+		await Task.MainThread();
 		_objects.Remove( chunk );
 		_chunks.Remove( chunk.Position );
 
-		chunkObject?.Destroy();
+		chunkObject?.Dispose();
 	}
 }

@@ -56,47 +56,49 @@ public class VoxelVolume
 		Scene.RenderAttributes.Set( "VoxelAtlas", Atlas.Texture );
 	}
 
-	protected override void OnStart()
+	protected override async Task OnLoad()
 	{
-		base.OnStart();
+		await base.OnLoad();
 
 		Atlas?.Build();
 
 		// some funky testing :D
-		GameTask.RunInThreadAsync( async () => {
-			await GameTask.WorkerThread();
+		var chunks = new Dictionary<Vector3Int, VoxelVolume.Chunk>();
+		async Task<Chunk> CreatePerlinChunk( int x, int y )
+		{
+			var chunk = new Chunk( x, y, 0, this );
+			await Task.WorkerThread();
 
-			Chunk CreatePerlinChunk( int x, int y )
-			{
-				var chunk = new Chunk( x, y, 0, this );
-
-				for ( byte i = 0; i < VoxelUtils.CHUNK_SIZE; i++ )
-					for ( byte j = 0; j < VoxelUtils.CHUNK_SIZE; j++ )
-					{
-						var noise = Sandbox.Utility.Noise.Perlin( x * VoxelUtils.CHUNK_SIZE + i, y * VoxelUtils.CHUNK_SIZE + j );
-						var height = Math.Clamp( (int)(MathF.Pow( noise * VoxelUtils.CHUNK_SIZE, 2f ) - VoxelUtils.CHUNK_SIZE * 2), 1, VoxelUtils.CHUNK_SIZE );
-
-						for ( byte k = 0; k < height; k++ )
-						{
-							const ushort GRASS = 1;
-							const ushort DIRT = 2;
-							var tex = k >= height - 1 ? GRASS : DIRT;
-
-							chunk.SetVoxel( i, j, k, new Voxel( Color32.White, tex ) );
-						}
-					}
-
-				_chunks.Add( new Vector3Int( x, y, 0 ), chunk );
-				return chunk;
-			}
-
-			for ( int x = -8; x < 8; x++ )
-				for ( int y = -8; y < 8; y++ )
+			for ( byte i = 0; i < VoxelUtils.CHUNK_SIZE; i++ )
+				for ( byte j = 0; j < VoxelUtils.CHUNK_SIZE; j++ )
 				{
-					var chunk = CreatePerlinChunk( x, y );
+					var noise = Sandbox.Utility.Noise.Perlin( x * VoxelUtils.CHUNK_SIZE + i, y * VoxelUtils.CHUNK_SIZE + j );
+					var height = Math.Clamp( (int)(MathF.Pow( noise * VoxelUtils.CHUNK_SIZE, 2f ) - VoxelUtils.CHUNK_SIZE * 2), 1, VoxelUtils.CHUNK_SIZE );
+
+					for ( byte k = 0; k < height; k++ )
+					{
+						const ushort GRASS = 1;
+						const ushort DIRT = 2;
+						var tex = k >= height - 1 ? GRASS : DIRT;
+
+						chunk.SetVoxel( i, j, k, new Voxel( Color32.White, tex ) );
+					}
 				}
 
-			await GenerateMeshes( _chunks.Values );
-		} );
+			return chunk;
+		}
+
+		await Task.WorkerThread();
+		for ( int x = -8; x < 8; x++ )
+			for ( int y = -8; y < 8; y++ )
+			{
+
+				var chunk = await CreatePerlinChunk( x, y );
+				chunks.Add( new Vector3Int( x, y, 0 ), chunk );
+			}
+
+		await Task.MainThread();
+		SetChunks( chunks );
+		await GenerateMeshes( chunks.Values );
 	}
 }

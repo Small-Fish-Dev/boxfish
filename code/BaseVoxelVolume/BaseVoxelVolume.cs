@@ -47,17 +47,18 @@ public abstract partial class BaseVoxelVolume<T, U> : Component
 
 	protected override void OnEnabled()
 	{
-		if ( !_chunks.Any() ) return;
-		Task.RunInThreadAsync( () => GenerateMeshes( _chunks.Values, true ) );
+		// if ( !_chunks.Any() ) return;
+		// Task.RunInThreadAsync( () => GenerateMeshes( _chunks.Values, true ) );
 	}
 
 	protected override void OnDisabled()
 	{
-		DestroyObjects();
+		// DestroyObjects();
 	}
 
 	protected override void OnDestroy()
 	{
+		//DestroyObjects();
 		_chunks?.Clear();
 	}
 }

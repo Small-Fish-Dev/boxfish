@@ -4,7 +4,9 @@ global using System.Collections.Generic;
 global using System.Runtime.InteropServices;
 global using System.Linq;
 global using System.Threading.Tasks;
+global using System.Threading;
 global using System.Text.Json.Serialization;
+global using System.Buffers;
 
 global using Boxfish.Utility;
 
@@ -14,5 +16,5 @@ namespace Boxfish;
 
 internal static class BoxfishGlobal
 {
-	public static Sandbox.Diagnostics.Logger Logger { get; } = new( "Boxfish" );
+	internal static Sandbox.Diagnostics.Logger Logger { get; } = new( "Boxfish" );
 }
