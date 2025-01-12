@@ -48,8 +48,8 @@ public abstract partial class BaseVoxelVolume<T, U>
 	/// <param name="z"></param>
 	/// <param name="chunk"></param>
 	/// <param name="relative"></param>
-	/// <returns></returns>
-	public Vector3Int GetLocalSpace( int x, int y, int z, out Chunk chunk, Chunk relative = null )
+	/// <returns>The position local to the chunk.</returns>
+	public (byte x, byte y, byte z) GetLocalSpace( int x, int y, int z, out Chunk chunk, Chunk relative = null )
 	{
 		var position = new Vector3Int(
 			((float)(x + (relative?.X ?? 0) * VoxelUtils.CHUNK_SIZE) / VoxelUtils.CHUNK_SIZE).FloorToInt(),
@@ -60,10 +60,10 @@ public abstract partial class BaseVoxelVolume<T, U>
 		chunk = null;
 		_ = Chunks?.TryGetValue( position, out chunk );
 
-		return new Vector3Int(
-			(x % VoxelUtils.CHUNK_SIZE + VoxelUtils.CHUNK_SIZE) % VoxelUtils.CHUNK_SIZE,
-			(y % VoxelUtils.CHUNK_SIZE + VoxelUtils.CHUNK_SIZE) % VoxelUtils.CHUNK_SIZE,
-			(z % VoxelUtils.CHUNK_SIZE + VoxelUtils.CHUNK_SIZE) % VoxelUtils.CHUNK_SIZE
+		return (
+			(byte)((x % VoxelUtils.CHUNK_SIZE + VoxelUtils.CHUNK_SIZE) % VoxelUtils.CHUNK_SIZE),
+			(byte)((y % VoxelUtils.CHUNK_SIZE + VoxelUtils.CHUNK_SIZE) % VoxelUtils.CHUNK_SIZE),
+			(byte)((z % VoxelUtils.CHUNK_SIZE + VoxelUtils.CHUNK_SIZE) % VoxelUtils.CHUNK_SIZE)
 		);
 	}
 
