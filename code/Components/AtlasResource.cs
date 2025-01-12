@@ -107,6 +107,19 @@ public sealed class AtlasResource : GameResource
 	}
 
 	/// <summary>
+	/// Look for an atlas item with the exact name.
+	/// </summary>
+	/// <param name="name"></param>
+	/// <param name="id"></param>
+	/// <returns></returns>
+	public bool TryFindByName( string name, out ushort id )
+	{
+		var item = _items.FirstOrDefault( x => x.Name == name );
+		id = item?.Index ?? 0;
+		return item != null;
+	}
+
+	/// <summary>
 	/// Try get a specific atlas item by index.
 	/// </summary>
 	/// <param name="index"></param>
