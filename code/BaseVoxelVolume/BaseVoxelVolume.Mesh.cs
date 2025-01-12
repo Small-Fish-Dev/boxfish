@@ -1,7 +1,20 @@
-﻿namespace Boxfish;
+namespace Boxfish;
 
 partial class BaseVoxelVolume<T, U>
 {
+	/// <summary>
+	/// Do we want to store chunks while in editor?
+	/// <para>NOTE: You'd also want to implement <see cref="Component.ExecuteInEditor"/> on your component.</para>
+	/// </summary>
+	public virtual bool StoreEditorChunks { get; } = false;
+
+	/// <summary>
+	/// Requires for <see cref="StoreEditorChunks"/> to be true.
+	/// <para>NOTE: You will still have to manually generate chunks with <see cref="GenerateMesh(Chunk, bool)"/> for this to store anything.</para>
+	/// </summary>
+	public IReadOnlyDictionary<Vector3Int, Model> EditorChunks => _editorChunks;
+	private Dictionary<Vector3Int, Model> _editorChunks = new();
+
 	/// <summary>
 	/// Should we ignore out of bounds faces? 
 	/// <para>NOTE: This does not affect the +Z faces.</para>
@@ -168,6 +181,11 @@ partial class BaseVoxelVolume<T, U>
 					voxelMesh.Offset += 4 * drawCount;
 				}
 
+		await Task.MainThread();
+
+		if ( !this.IsValid() )
+			return;
+
 		// Check if we actually end up with vertices.
 		if ( !chunk.Empty )
 		{
@@ -178,12 +196,12 @@ partial class BaseVoxelVolume<T, U>
 				builder.AddMesh( voxelMesh.Mesh );
 			else
 			{
-				_ = builder.Create();
+				// _ = builder.Create();
 
 				if ( chunkObject == null )
 				{
-					//if ( _gizmoCache.ContainsKey( chunk.Position ) )
-						//_gizmoCache.Remove( chunk.Position );
+					if ( _editorChunks.ContainsKey( chunk.Position ) )
+						_editorChunks.Remove( chunk.Position );
 				}
 				else
 				{
@@ -196,27 +214,27 @@ partial class BaseVoxelVolume<T, U>
 			if ( chunkObject == null ) // We are in editor.
 			{
 				var model = builder.Create();
-				/*if ( _gizmoCache.ContainsKey( chunk.Position ) )
-					_gizmoCache.Remove( chunk.Position );
 
-				_gizmoCache.Add( chunk.Position, model );*/
+				if ( _editorChunks.ContainsKey( chunk.Position ) )
+					_editorChunks.Remove( chunk.Position );
+
+				_editorChunks.Add( chunk.Position, model );
 				return;
 			}
 
 			if ( physics )
 				builder = builder.AddCollisionMesh( collisionBuffer.Vertices.ToArray(), collisionBuffer.Indices.ToArray() );
-			
+
 			chunkObject.Rebuild( builder.Create(), physics );
 
 			return;
 		}
 
 		// Remove the Gizmo chunk.
-		//else if ( voxelChunk == null && _gizmoCache.ContainsKey( chunk.Position ) )
-		//_gizmoCache.Remove( chunk.Position );
+		else if ( chunkObject == null && _editorChunks.ContainsKey( chunk.Position ) )
+			_editorChunks.Remove( chunk.Position );
 
 		// Let's remove our empty chunk!
-		await Task.MainThread();
 		_objects.Remove( chunk );
 		_chunks.Remove( chunk.Position );
 

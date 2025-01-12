@@ -62,9 +62,34 @@ public abstract partial class BaseVoxelVolume<T, U> : Component
 		// DestroyObjects();
 	}
 
+	protected override void DrawGizmos()
+	{
+		// Draw gizmo borders for our chunks.
+		if ( _chunks == null || !_chunks.Any() ) 
+			return;
+
+		using ( Gizmo.Scope( "VoxelVolume" ) )
+		{
+			Gizmo.Transform = global::Transform.Zero;
+			Gizmo.Draw.Color = Color.Yellow;
+			Gizmo.Draw.LineThickness = 1f;
+
+			foreach ( var (position, _) in _chunks )
+			{
+				// Draw chunk border.
+				var pos = (Vector3)position * Scale * VoxelUtils.CHUNK_SIZE;
+				var bounds = new BBox( pos, pos + (Vector3)VoxelUtils.CHUNK_SIZE * Scale );
+
+				Gizmo.Draw.LineBBox( bounds );
+			}
+		}
+	}
+
 	protected override void OnDestroy()
 	{
-		//DestroyObjects();
+		// Dispose these!
+		DestroyObjects();
+		_editorChunks?.Clear();
 		_chunks?.Clear();
 	}
 }
