@@ -1,4 +1,4 @@
-namespace Boxfish;
+﻿namespace Boxfish;
 
 partial class BaseVoxelVolume<T, U>
 {
@@ -132,15 +132,15 @@ partial class BaseVoxelVolume<T, U>
 						// Calculate how much we can fill.
 						while ( canSpread.x || canSpread.y || canSpread.z )
 						{
-							canSpread.x = false;// trySpreadX( chunk, canSpread.x, ref tested, start, ref size );
-							canSpread.y = false;// trySpreadY( chunk, canSpread.y, ref tested, start, ref size );
-							canSpread.z = false;// trySpreadZ( chunk, canSpread.z, ref tested, start, ref size );
+							canSpread.x = trySpreadX( chunk, canSpread.x, ref tested, start, ref size );
+							canSpread.y = trySpreadY( chunk, canSpread.y, ref tested, start, ref size );
+							canSpread.z = trySpreadZ( chunk, canSpread.z, ref tested, start, ref size );
 						}
 
 						var scale = new Vector3( size.x, size.y, size.z ) * Scale;
 						var pos = new Vector3( start.x, start.y, start.z ) * Scale
 							+ scale / 2f
-							- Scale / 2f;
+							- Scale;
 
 						collisionBuffer.AddCube( pos, scale, Rotation.Identity );
 					}

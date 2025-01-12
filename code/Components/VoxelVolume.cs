@@ -1,4 +1,4 @@
-namespace Boxfish.Components;
+﻿namespace Boxfish.Components;
 
 /// <summary>
 /// Example voxel volume component.
