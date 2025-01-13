@@ -68,20 +68,17 @@ public abstract partial class BaseVoxelVolume<T, U> : Component
 		if ( _chunks == null || !_chunks.Any() ) 
 			return;
 
-		using ( Gizmo.Scope( "VoxelVolume" ) )
+		Gizmo.Transform = global::Transform.Zero;
+		Gizmo.Draw.Color = Color.Yellow;
+		Gizmo.Draw.LineThickness = 1f;
+
+		foreach ( var (position, _) in _chunks )
 		{
-			Gizmo.Transform = global::Transform.Zero;
-			Gizmo.Draw.Color = Color.Yellow;
-			Gizmo.Draw.LineThickness = 1f;
+			// Draw chunk border.
+			var pos = (Vector3)position * Scale * VoxelUtils.CHUNK_SIZE;
+			var bounds = new BBox( pos, pos + (Vector3)VoxelUtils.CHUNK_SIZE * Scale );
 
-			foreach ( var (position, _) in _chunks )
-			{
-				// Draw chunk border.
-				var pos = (Vector3)position * Scale * VoxelUtils.CHUNK_SIZE;
-				var bounds = new BBox( pos, pos + (Vector3)VoxelUtils.CHUNK_SIZE * Scale );
-
-				Gizmo.Draw.LineBBox( bounds );
-			}
+			Gizmo.Draw.LineBBox( bounds );
 		}
 	}
 
