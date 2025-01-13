@@ -34,6 +34,30 @@ file struct NVector3Int
 
 partial class BaseVoxelVolume<T, U>
 {
+	protected Chunk GetOrCreateChunk( Vector3Int position, (byte x, byte y, byte z)? local = null, Chunk relative = null )
+	{
+		if ( _chunks == null ) 
+			return null;
+
+		var globalPosition = new Vector3Int(
+			((relative?.Position.x ?? 0) + (float)position.x / VoxelUtils.CHUNK_SIZE - (float)(local?.x ?? 0) / VoxelUtils.CHUNK_SIZE).CeilToInt(),
+			((relative?.Position.y ?? 0) + (float)position.y / VoxelUtils.CHUNK_SIZE - (float)(local?.y ?? 0) / VoxelUtils.CHUNK_SIZE).CeilToInt(),
+			((relative?.Position.z ?? 0) + (float)position.z / VoxelUtils.CHUNK_SIZE - (float)(local?.z ?? 0) / VoxelUtils.CHUNK_SIZE).CeilToInt()
+		);
+
+		// Check if we have a chunk already or are out of bounds.
+		if ( Chunks.TryGetValue( globalPosition, out var chunk ) )
+			return chunk;
+
+		// Create new chunk.
+		_chunks.Add(
+			globalPosition,
+			chunk = new Chunk( globalPosition.x, globalPosition.y, globalPosition.z, this )
+		);
+
+		return chunk;
+	}
+
 	/// <summary>
 	/// Set voxel at 3D voxel position.
 	/// <para>NOTE: This will not automatically update the chunk mesh, you will have to re-generate it manually.</para>
@@ -43,18 +67,24 @@ partial class BaseVoxelVolume<T, U>
 	/// <param name="z"></param>
 	/// <param name="voxel"></param>
 	/// <param name="relative"></param>
-	public void SetVoxel( int x, int y, int z, T voxel, Chunk relative = null )
+	/// <param name="createChunk"></param>
+	public void SetVoxel( int x, int y, int z, T voxel, Chunk relative = null, bool createChunk = true )
 	{
 		var position = new Vector3Int( x, y, z );
 		SetVoxel( position, voxel, relative );
 	}
 
-	/// <inheritdoc cref="SetVoxel(int, int, int, T, Chunk)" />
-	public void SetVoxel( Vector3Int position, T voxel, Chunk relative = null )
+	/// <inheritdoc cref="SetVoxel(int, int, int, T, Chunk, bool)" />
+	public void SetVoxel( Vector3Int position, T voxel, Chunk relative = null, bool createChunk = true )
 	{
 		var pos = GetLocalSpace( position.x, position.y, position.z, out var chunk, relative );
-		if ( chunk == null ) 
-			return;
+		if ( chunk == null )
+		{
+			if ( !createChunk || !IsValidVoxel( voxel ) )
+				return;
+
+			chunk = GetOrCreateChunk( position, pos, relative );
+		}
 
 		chunk.SetVoxel( pos.x, pos.y, pos.z, voxel );
 	}
