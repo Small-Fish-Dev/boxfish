@@ -17,8 +17,14 @@ public class AtlasItemEditor : ControlWidget
 	{
 		Layout = Layout.Column();
 		Layout.Spacing = 2;
-		
+
 		var serializedObject = property.GetValue<AtlasResource.AtlasItem>()?.GetSerialized();
+		if ( serializedObject is null ) // Create new value if null.
+		{
+			property.SetValue<AtlasResource.AtlasItem>( new() );
+			serializedObject = property.GetValue<AtlasResource.AtlasItem>()?.GetSerialized();
+		}
+
 		if ( serializedObject is not null )
 		{
 			Texture = serializedObject.GetProperty( nameof( AtlasResource.AtlasItem.Texture ) );
@@ -53,6 +59,8 @@ public class AtlasItemEditor : ControlWidget
 
 	protected override void OnPaint()
 	{
+		base.OnPaint();
+
 		// Something fucked up??
 		if ( UseRegion == null || Texture == null || Region == null || Atlas == null )
 			return;
