@@ -18,6 +18,7 @@ partial class BaseVoxelVolume<T, U>
 	/// <summary>
 	/// Should we ignore out of bounds faces? 
 	/// <para>NOTE: This does not affect the +Z faces.</para>
+	/// <para>NOTE: This does not work 100% well with varying elevation.</para>
 	/// </summary>
 	public virtual bool IgnoreOOBFaces { get; } = true;
 
@@ -213,12 +214,16 @@ partial class BaseVoxelVolume<T, U>
 
 			if ( chunkObject == null ) // We are in editor.
 			{
-				var model = builder.Create();
+				if ( StoreEditorChunks )
+				{
+					var model = builder.Create();
 
-				if ( _editorChunks.ContainsKey( chunk.Position ) )
-					_editorChunks.Remove( chunk.Position );
+					if ( _editorChunks.ContainsKey( chunk.Position ) )
+						_editorChunks.Remove( chunk.Position );
 
-				_editorChunks.Add( chunk.Position, model );
+					_editorChunks.Add( chunk.Position, model );
+				}
+
 				return;
 			}
 

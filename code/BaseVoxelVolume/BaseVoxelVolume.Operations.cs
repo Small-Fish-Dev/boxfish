@@ -103,6 +103,8 @@ partial class BaseVoxelVolume<T, U>
 			return;
 
 		SetChunks( chunks );
+
+		await Task.CompletedTask;
 	}
 
 	/// <summary>

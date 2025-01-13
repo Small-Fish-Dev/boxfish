@@ -107,7 +107,7 @@ partial class VoxFormat
 						}
 						catch
 						{
-							Log.Warning( $"VoxImporter - Invalid transform on TransformChunk nTRN" );
+							Logger.Warning( $"VoxImporter - Invalid transform on TransformChunk nTRN" );
 						}
 
 						break;

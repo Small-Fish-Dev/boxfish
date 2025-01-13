@@ -51,7 +51,7 @@ partial class VoxFormat : VoxelFormat
 		var data = reader.ReadBytes( size );
 		if ( !Chunks.TryGetValue( id, out var type ) )
 		{
-			//Log.Warning( $"VoxParser unsupported chunk ID {id}. " );
+			//Logger.Warning( $"VoxParser unsupported chunk ID {id}. " );
 			return new Chunk();
 		}
 
@@ -119,7 +119,7 @@ partial class VoxFormat : VoxelFormat
 		var main = ReadChunk( reader );
 		if ( main is null || main.Children?.Length == 0 )
 		{
-			Log.Warning( $"VoxParser main chunk was empty?" );
+			Logger.Warning( $"VoxParser main chunk was empty?" );
 			return null;
 		}
 

@@ -298,7 +298,7 @@ public sealed class AtlasResource : GameResource
 			}
 		}
 
-		Log.Info( $"Successfully built texture for our AtlasResource." );
+		Logger.Info( $"Successfully built texture for our AtlasResource." );
 	}
 
 	protected override void PostLoad()

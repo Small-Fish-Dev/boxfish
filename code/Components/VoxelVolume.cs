@@ -20,7 +20,7 @@ public class VoxelVolume
 	/// <para>Defaulted to 1 meter.</para>
 	/// </summary>
 	[Property, Range( 0.1f, 50f ), Category( "Appearance" )]
-	public float VoxelScale { get; set; } = 1f / 0.0254f;
+	public float VoxelScale { get; set; } = VoxelUtils.METER;
 
 	#region Abstract class implementation
 	private Material _material = Material.FromShader( "shaders/base_voxel.shader" );
@@ -52,8 +52,14 @@ public class VoxelVolume
 		base.SetAttributes( attributes );
 
 		// Set some render attributes.
+		if ( Atlas is null )
+		{
+			Logger.Warning( $"Atlas is null, please assign an AtlasResource to {GameObject}!" );
+			return;
+		}
+
 		attributes.Set( "VoxelScale", VoxelScale );
-		attributes.Set( "VoxelAtlas", Atlas.Texture );
+		attributes.Set( "VoxelAtlas", Atlas?.Texture );
 	}
 
 	protected override void OnStart()

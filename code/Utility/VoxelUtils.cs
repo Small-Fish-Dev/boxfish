@@ -16,6 +16,7 @@ public enum FacesEnum : byte
 public static class VoxelUtils
 {
 	public const int CHUNK_SIZE = 16;
+	public const float METER = 1f / 0.0254f;
 
 	/// <summary>
 	/// Indices for cube faces.

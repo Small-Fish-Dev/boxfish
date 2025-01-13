@@ -19,7 +19,6 @@ COMMON
 	StaticCombo( S_MODE_DEPTH, 0..1, Sys( ALL ) );
 
     float g_flVoxelScale < Attribute( "VoxelScale" ); Default( 1.0 ); >;
-    float2 g_vTextureSize < Attribute( "TextureSize" ); Default2( 32.0, 32.0 ); >;
 }
 
 struct VertexInput
@@ -106,7 +105,6 @@ PS
     float4 MainPs( PixelInput i ) : SV_Target0
 	{   
         float4 albedo = Tex2DArrayS( g_tAlbedo, g_sSampler, i.vTexCoord.xyz ).rgba;
-        //float3 rae = Tex2DArrayS( g_tRAE, g_sSampler, i.vTexCoord.xyz ).rgb;
 
         Material m = Material::Init();
         m.Albedo = albedo.rgb * i.vColor.rgb * i.fOcclusion;

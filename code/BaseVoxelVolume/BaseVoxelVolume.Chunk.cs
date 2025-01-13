@@ -30,6 +30,7 @@ partial class BaseVoxelVolume<T, U>
 		private const int CHUNK_SIZE_P2 = VoxelUtils.CHUNK_SIZE * VoxelUtils.CHUNK_SIZE;
 		private const int CHUNK_SIZE_P3 = CHUNK_SIZE_P2 * VoxelUtils.CHUNK_SIZE;
 
+#pragma warning disable SB3000 // Hotloading not supported
 		private static Vector3Int[] _neighbors = 
 		[
 			new ( 1, 0, 0 ),
@@ -39,6 +40,7 @@ partial class BaseVoxelVolume<T, U>
 			new ( 0, 0, 1 ),
 			new ( 0, 0, -1 ),
 		];
+#pragma warning restore SB3000 // Hotloading not supported
 
 		public int X { get; }
 		public int Y { get; }
