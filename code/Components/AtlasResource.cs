@@ -74,6 +74,20 @@ public sealed class AtlasResource : GameResource
 		/// </summary>
 		[Hide, JsonIgnore]
 		public ushort Index { get; set; }
+
+		/// <summary>
+		/// Get data by key, or default, if key doesn't exist.
+		/// </summary>
+		/// <param name="key"></param>
+		/// <param name="default"></param>
+		/// <returns></returns>
+		public string GetData( string key, string @default = default )
+		{
+			if ( _data.TryGetValue( key, out var value ) )
+				return value;
+
+			return @default;
+		}
 	}
 
 	/// <inheritdoc cref="_items" />
