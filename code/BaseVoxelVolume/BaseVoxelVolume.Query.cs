@@ -9,7 +9,7 @@ public abstract partial class BaseVoxelVolume<T, U>
 	{
 		public T Voxel;
 		public bool HasVoxel;
-		public Vector3Int LocalPosition;
+		public (byte x, byte y, byte z) LocalPosition;
 		public Vector3Int GlobalPosition;
 		public Chunk Chunk;
 	}
@@ -116,7 +116,7 @@ public abstract partial class BaseVoxelVolume<T, U>
 			Chunk = chunk,
 			Voxel = voxel ?? default,
 			HasVoxel = IsValidVoxel( voxel ?? default ),
-			LocalPosition = new Vector3Int( vx, vy, vz ),
+			LocalPosition = (vx, vy, vz),
 			GlobalPosition = new Vector3Int(
 				x + (relative?.X ?? 0) * (VoxelUtils.CHUNK_SIZE - 1), 
 				y + (relative?.Y ?? 0) * (VoxelUtils.CHUNK_SIZE - 1), 

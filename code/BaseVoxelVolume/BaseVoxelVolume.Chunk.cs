@@ -30,6 +30,16 @@ partial class BaseVoxelVolume<T, U>
 		private const int CHUNK_SIZE_P2 = VoxelUtils.CHUNK_SIZE * VoxelUtils.CHUNK_SIZE;
 		private const int CHUNK_SIZE_P3 = CHUNK_SIZE_P2 * VoxelUtils.CHUNK_SIZE;
 
+		private static Vector3Int[] _neighbors = 
+		[
+			new ( 1, 0, 0 ),
+			new ( -1, 0, 0 ),
+			new ( 0, 1, 0 ),
+			new ( 0, -1, 0 ),
+			new ( 0, 0, 1 ),
+			new ( 0, 0, -1 ),
+		];
+
 		public int X { get; }
 		public int Y { get; }
 		public int Z { get; }
@@ -111,18 +121,8 @@ partial class BaseVoxelVolume<T, U>
 			// Let's include this chunk too if we want.
 			if ( includeSelf ) yield return this;
 
-			var neighbors = new Vector3Int[]
-			{
-				new( 1, 0, 0 ),
-				new( -1, 0, 0 ),
-				new( 0, 1, 0 ),
-				new( 0, -1, 0 ),
-				new( 0, 0, 1 ),
-				new( 0, 0, -1 ),
-			};
-
 			// Yield return affected neighbors.
-			foreach ( var direction in neighbors )
+			foreach ( var direction in _neighbors )
 			{
 				// Check if we should include the neighbor.
 				if ( _chunks.TryGetValue( Position + direction, out var result )
