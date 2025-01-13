@@ -49,6 +49,18 @@
       "Opaque": true,
       "OnBlockPlaced": null,
       "OnBlockBroken": null
+    },
+    {
+      "Name": "Logs",
+      "UseRegion": true,
+      "Texture": null,
+      "Region": {
+        "Position": "0,128",
+        "Size": "192,32"
+      },
+      "Opaque": false,
+      "OnBlockPlaced": null,
+      "OnBlockBroken": null
     }
   ],
   "__references": [],
