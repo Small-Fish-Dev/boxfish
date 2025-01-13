@@ -56,49 +56,9 @@ public class VoxelVolume
 		attributes.Set( "VoxelAtlas", Atlas.Texture );
 	}
 
-	protected override async void OnStart()
+	protected override void OnStart()
 	{
 		base.OnStart();
-
 		Atlas?.Build();
-
-		// some funky testing :D
-		/*var chunks = new Dictionary<Vector3Int, VoxelVolume.Chunk>();
-		var seed = Game.Random.Int( 0, int.MaxValue - 1 );
-		Chunk CreatePerlinChunk( int x, int y )
-		{
-			var chunk = new Chunk( x, y, 0, this );
-
-			for ( byte i = 0; i < VoxelUtils.CHUNK_SIZE; i++ )
-				for ( byte j = 0; j < VoxelUtils.CHUNK_SIZE; j++ )
-				{
-					var noise = Sandbox.Utility.Noise.Perlin( x * VoxelUtils.CHUNK_SIZE + i, y * VoxelUtils.CHUNK_SIZE + j, seed );
-					var height = Math.Clamp( noise * VoxelUtils.CHUNK_SIZE, 1, VoxelUtils.CHUNK_SIZE );
-
-					for ( byte k = 0; k < height; k++ )
-					{
-						const ushort GRASS = 1;
-						const ushort DIRT = 2;
-						var tex = k >= height - 1 ? GRASS : DIRT;
-
-						chunk.SetVoxel( i, j, k, new Voxel( Color32.White, tex ) );
-					}
-				}
-
-			return chunk;
-		}
-
-		for ( int x = -2; x < 5; x++ )
-			for ( int y = -2; y < 5; y++ )
-			{
-				var chunk = CreatePerlinChunk( x, y );
-				chunks.Add( new Vector3Int( x, y, 0 ), chunk );
-			};*/
-
-		var chunks = await VoxelImporter.FromPath( "voxel/summer_cottage.vox" )
-			.BuildAsync<Voxel, VoxelVertex>();
-
-		SetChunks( chunks );
-		await GenerateMeshes( chunks.Values );
 	}
 }
