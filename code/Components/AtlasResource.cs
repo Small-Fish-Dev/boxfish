@@ -55,6 +55,20 @@ public sealed class AtlasResource : GameResource
 		[KeyProperty, Feature( "Callbacks" )]
 		public Action<VoxelVolume.VoxelQueryData> OnBlockBroken { get; set; }
 
+		/// <inheritdoc cref="_data" />
+		[Header( "Item - Data" )]
+		[KeyProperty, Feature( "Data" )]
+		[JsonIgnore, Hide]
+		public IReadOnlyDictionary<string, string> Data => _data;
+
+		/// /// <summary>
+		/// Container for an atlas item's custom data.
+		/// <para>You can use this for embedding stuff like health, or step sounds inside the atlas item itself, then fetching those values through code.</para>
+		/// </summary>
+		[Header( "Item - Data" )]
+		[KeyProperty, Feature( "Data" ), WideMode]
+		private Dictionary<string, string> _data { get; set; }
+
 		/// <summary>
 		/// The index of our atlas item.
 		/// </summary>
@@ -62,9 +76,7 @@ public sealed class AtlasResource : GameResource
 		public ushort Index { get; set; }
 	}
 
-	/// <summary>
-	/// List of all the items in our atlas.
-	/// </summary>
+	/// <inheritdoc cref="_items" />
 	[JsonIgnore, Hide] 
 	public IReadOnlyList<AtlasItem> Items => _items;
 
@@ -86,6 +98,9 @@ public sealed class AtlasResource : GameResource
 	[JsonInclude]
 	public Vector2Int Size { get; set; } = 32;
 
+	/// <summary>
+	/// List of all the items in our atlas.
+	/// </summary>
 	[JsonInclude]
 	[InlineEditor, WideMode, Space]
 	[Header( "All atlas texture items should be added here!\nSee https://sbox.game/boxfish/ or README.md for more explanation." ), Title( "" )]
