@@ -86,6 +86,7 @@ partial class BaseVoxelVolume<T, U>
 		public void SetParent( BaseVoxelVolume<T, U> volume )
 		{
 			_volume = volume;
+			_chunks = volume._chunks;
 		}
 
 		public T GetVoxel( byte x, byte y, byte z )
