@@ -8,7 +8,7 @@ partial class BaseVoxelVolume<T, U>
 	public class AStarNode : IHeapItem<AStarNode>, IEquatable<AStarNode>, IValid
 	{
 		public VoxelQueryData Data { get; internal set; }
-		public BaseVoxelVolume<T, U> Volume { get; internal set; }
+		public BaseVoxelVolume<T, U> Volume { get; set; }
 		public float gCost { get; set; } = 0f;
 		public float hCost { get; set; } = 0f;
 		public float fCost => gCost + hCost;
@@ -45,7 +45,7 @@ partial class BaseVoxelVolume<T, U>
 						if ( !Volume.IsAboveFree( checkPosition, Math.Min( 3, 3 - z ) ) ) continue; // Space is not free for us to occupy (DEFAULT IS 3 BLOCKS TALL, WILL MODIFY
 						z = 3; // If you think about it, we checked the above voxels already
 
-						yield return new AStarNode( queryData, this );
+						yield return new AStarNode( queryData, this ) { Volume = Volume };
 					}
 		}
 

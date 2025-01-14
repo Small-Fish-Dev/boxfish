@@ -112,7 +112,7 @@ partial class BaseVoxelVolume<T, U>
 	/// <param name="acceptPartial">If it doesn't find the target, return the closest node found</param>
 	/// <param name="reversed">Whether or not to reverse the resulting path.</param>
 	/// <returns>A path</returns>
-	internal async Task<AStarPath> ComputePathInternal( AStarNode startNode, AStarNode endNode, CancellationToken token, float maxDistance = 2048f, bool acceptPartial = true, bool reversed = false )
+	public async Task<AStarPath> ComputePath( AStarNode startNode, AStarNode endNode, CancellationToken token, float maxDistance = 2048f, bool acceptPartial = true, bool reversed = false )
 	{
 		var path = new List<AStarNode>();
 		var maxCells = 8192;
@@ -221,7 +221,7 @@ partial class BaseVoxelVolume<T, U>
 			if ( node.Parent == null )
 				continue;
 
-			var newNode = new AStarNode( node.Parent.Data, node );
+			var newNode = new AStarNode( node.Parent.Data, node ) { Volume = startNode.Volume };
 			fixedList.Add( newNode );
 		}
 
