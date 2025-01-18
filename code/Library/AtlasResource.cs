@@ -83,6 +83,7 @@ public sealed class AtlasResource : GameResource
 		/// <returns></returns>
 		public string GetData( string key, string @default = default )
 		{
+			if ( _data is null ) return @default;
 			if ( _data.TryGetValue( key, out var value ) )
 				return value;
 
