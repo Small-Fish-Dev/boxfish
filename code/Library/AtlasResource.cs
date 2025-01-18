@@ -67,6 +67,7 @@ public sealed class AtlasResource : GameResource
 		/// </summary>
 		[Header( "Item - Data" )]
 		[KeyProperty, Feature( "Data" ), WideMode]
+		[Property, JsonInclude]
 		private Dictionary<string, string> _data { get; set; }
 
 		/// <summary>
