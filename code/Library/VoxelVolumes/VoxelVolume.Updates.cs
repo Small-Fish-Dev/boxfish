@@ -3,13 +3,13 @@
 partial class VoxelVolume
 {
 	/// <summary>
-	/// The frequency of chunk mesh updates, should be somewhere around 1/30 (used for <see cref="TickUpdate"/>).
+	/// The frequency of chunk mesh updates, should be somewhere around 1 / 30f (used for <see cref="TickUpdate"/>).
 	/// <para>NOTE: Set to 0 to completely ignore updates.</para>
 	/// </summary>
 	public virtual float UpdateFrequency { get; } = 1 / 30f;
 
 	/// <summary>
-	/// The time passed since <see cref="TickUpdate"/> has been called from .
+	/// The time passed since <see cref="TickUpdate"/> has been called.
 	/// </summary>
 	protected TimeSince SinceUpdate { get; private set; }
 
