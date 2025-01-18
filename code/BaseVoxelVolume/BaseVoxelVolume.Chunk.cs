@@ -71,7 +71,7 @@ partial class BaseVoxelVolume<T, U>
 			Z = z;
 
 			_volume = volume;
-			_chunks = volume._chunks;
+			_chunks = volume?._chunks;
 			_voxels = new T[CHUNK_SIZE_P3];
 		}
 

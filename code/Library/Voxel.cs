@@ -1,4 +1,4 @@
-﻿namespace Boxfish.Components;
+﻿namespace Boxfish.Library;
 
 /// <summary>
 /// Default voxel struct used for the <see cref="VoxelVolume"/> component.

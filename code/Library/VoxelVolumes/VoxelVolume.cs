@@ -1,11 +1,11 @@
-﻿namespace Boxfish.Components;
+﻿namespace Boxfish.Library;
 
 /// <summary>
 /// Example voxel volume component.
 /// <para>If you want more freedom, see <see cref="BaseVoxelVolume{T, U}"/> instead.</para>
 /// </summary>
 [Icon( "view_in_ar" ), Category( "Boxfish" )]
-public class VoxelVolume
+public partial class VoxelVolume
 	: BaseVoxelVolume<Voxel, VoxelVertex>
 {
 	/// <summary>

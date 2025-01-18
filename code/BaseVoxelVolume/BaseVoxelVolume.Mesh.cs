@@ -15,12 +15,13 @@ partial class BaseVoxelVolume<T, U>
 	public IReadOnlyDictionary<Vector3Int, Model> EditorChunks => _editorChunks;
 	private Dictionary<Vector3Int, Model> _editorChunks = new();
 
+	// TODO: Does not work perfectly, we need to check if we are out of actual VoxelBounds first...
 	/// <summary>
 	/// Should we ignore out of bounds faces? 
 	/// <para>NOTE: This does not affect the +Z faces.</para>
 	/// <para>NOTE: This does not work 100% well with varying elevation.</para>
 	/// </summary>
-	public virtual bool IgnoreOOBFaces { get; } = true;
+	public virtual bool IgnoreOOBFaces { get; } = false;
 
 	/// <summary>
 	/// Shrimple structure containing voxel mesh information such as vertices.
@@ -38,7 +39,7 @@ partial class BaseVoxelVolume<T, U>
 
 		public void CreateBuffers( VertexAttribute[] layout )
 		{
-			if ( Indices.Count == 0 )
+			if ( !Indices.Any() )
 				return;
 
 			Valid = true;

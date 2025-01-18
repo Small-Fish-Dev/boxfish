@@ -1,4 +1,4 @@
-﻿namespace Boxfish.Components;
+﻿namespace Boxfish.Library;
 
 /// <summary>
 /// A resource containing textures for a <see cref="VoxelVolume"/>.

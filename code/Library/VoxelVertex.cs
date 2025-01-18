@@ -1,4 +1,4 @@
-﻿namespace Boxfish.Components;
+﻿namespace Boxfish.Library;
 
 [StructLayout( LayoutKind.Sequential )]
 public struct VoxelVertex
