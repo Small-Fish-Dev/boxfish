@@ -1,5 +1,11 @@
 ﻿namespace Boxfish.Library;
 
+/// <summary>
+/// A networked voxel volume component.
+/// <para>Remember to make your GameObject networked, and use the <see cref="BroadcastSet(Vector3Int, Boxfish.Library.Voxel)"/> etc.. methods to apply voxel changes!</para>
+/// <para>NOTE: You should inherit this component if you want to serialize a volume with something such as world generation..</para>
+/// </summary>
+[Icon( "view_in_ar" ), Category( "Boxfish" )]
 public partial class NetworkedVoxelVolume 
 	: VoxelVolume, Component.INetworkSnapshot
 {
