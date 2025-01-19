@@ -3,19 +3,19 @@
 
 static const float3 OffsetTable[8] = {
     float3( -0.5f, -0.5f, 0.5f ),
-	float3( -0.5f, 0.5f, 0.5f ),
-	float3( 0.5f, 0.5f, 0.5f ),
-	float3( 0.5f, -0.5f, 0.5f ),
-	float3( -0.5f, -0.5f, -0.5f ),
-	float3( -0.5f, 0.5f, -0.5f ),
-	float3( 0.5f, 0.5f, -0.5f ),
-	float3( 0.5f, -0.5f, -0.5f )
+    float3( -0.5f, 0.5f, 0.5f ),
+    float3( 0.5f, 0.5f, 0.5f ),
+    float3( 0.5f, -0.5f, 0.5f ),
+    float3( -0.5f, -0.5f, -0.5f ),
+    float3( -0.5f, 0.5f, -0.5f ),
+    float3( 0.5f, 0.5f, -0.5f ),
+    float3( 0.5f, -0.5f, -0.5f )
 };
 
 static const float FaceMultipliers[6] = {
     1.0f, 1.0f,
-	0.85f, 0.7f,
-	0.85f, 0.7f
+    0.85f, 0.7f,
+    0.85f, 0.7f
 };
 
 static const float3 FaceNormals[6] = {
