@@ -12,8 +12,20 @@ public partial class VoxelVolume
 	/// The reference to our atlas.
 	/// </summary>
 	[Property, Category( "Appearance" )]
-	public AtlasResource Atlas { get; set; } 
-		= ResourceLibrary.Get<AtlasResource>( "resources/base.voxatlas" );
+	public AtlasResource Atlas
+	{
+		get => _atlas;
+		set
+		{
+			if ( _atlas == value ) 
+				return;
+
+			_atlas = value;
+			UpdateObjects();
+		}
+	}
+
+	private AtlasResource _atlas = ResourceLibrary.Get<AtlasResource>( "resources/base.voxatlas" );
 
 	/// <summary>
 	/// The scale of our voxels in inches.
@@ -60,11 +72,41 @@ public partial class VoxelVolume
 
 		attributes.Set( "VoxelScale", VoxelScale );
 		attributes.Set( "VoxelAtlas", Atlas?.Texture );
+		attributes.Set( "TransformMatrix", TransformMatrix );
+	}
+
+	/// <summary>
+	/// Call this to update all attributes and transforms on ChunkObjects.
+	/// </summary>
+	protected void UpdateObjects()
+	{
+		foreach ( var (_, obj) in Objects )
+		{
+			var sceneObject = obj.SceneObject;
+			if ( sceneObject.IsValid() ) 
+				SetAttributes( sceneObject.Attributes );
+
+			var body = obj.Body;
+			if ( body.IsValid() );
+				body.Transform = WorldTransform;
+		}
 	}
 
 	protected override void OnStart()
 	{
 		base.OnStart();
 		Atlas?.Build();
+	}
+
+	protected override void OnEnabled()
+	{
+		base.OnEnabled();
+		GameObject.Transform.OnTransformChanged += UpdateObjects;
+	}
+
+	protected override void OnDisabled()
+	{
+		base.OnDisabled();
+		GameObject.Transform.OnTransformChanged -= UpdateObjects;
 	}
 }

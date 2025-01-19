@@ -18,6 +18,7 @@ COMMON
     #include "common/shared.hlsl"
 	StaticCombo( S_MODE_DEPTH, 0..1, Sys( ALL ) );
 
+    float4x4 g_flTransformMatrix < Attribute( "TransformMatrix" ); >;
     float g_flVoxelScale < Attribute( "VoxelScale" ); Default( 1.0 ); >;
 }
 
@@ -71,7 +72,7 @@ VS
         // Process vertex, figure out chunk position and global position.
         PixelInput o = ProcessVertex( i );
         float3 chunkPosition = o.vPositionWs - localPosition;
-        float3 globalPosition = chunkPosition * 16 * g_flVoxelScale + localPosition;
+        float3 globalPosition = mul(g_flTransformMatrix, float4(chunkPosition * 16 * g_flVoxelScale + localPosition, 1.0f)).xyz;
 
         o.vPositionPs = Position3WsToPs(globalPosition);
         o.vPositionWs.xyz = globalPosition;

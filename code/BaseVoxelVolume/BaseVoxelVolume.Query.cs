@@ -15,13 +15,24 @@ public abstract partial class BaseVoxelVolume<T, U>
 	}
 
 	/// <summary>
+	/// Apply our GameObject's transform to a 3D-vector.
+	/// </summary>
+	/// <param name="vector"></param>
+	/// <returns></returns>
+	public Vector3 ApplyWorldTransform( Vector3 vector )
+		=> new Vector3( (vector - WorldPosition) * WorldRotation.Inverse / WorldScale + WorldPosition );
+
+	/// <summary>
 	/// Converts a world position to a VoxelVolume position.
 	/// </summary>
 	/// <param name="position"></param>
+	/// <param name="transformed"></param>
 	/// <returns></returns>
-	public Vector3Int WorldToVoxel( Vector3 position )
+	public Vector3Int WorldToVoxel( Vector3 position, bool transformed = true )
 	{
-		var relative = position;
+		var relative = transformed 
+			? ApplyWorldTransform( position ) - WorldPosition
+			: position;
 
 		return new Vector3Int(
 			(relative.x / Scale).FloorToInt(),
@@ -34,10 +45,14 @@ public abstract partial class BaseVoxelVolume<T, U>
 	/// Converts a VoxelVolume position to a world position.
 	/// </summary>
 	/// <param name="position"></param>
+	/// <param name="transformed"></param>
 	/// <returns></returns>
-	public Vector3 VoxelToWorld( Vector3Int position )
+	public Vector3 VoxelToWorld( Vector3Int position, bool transformed = true )
 	{
-		return position * Scale;
+		if ( !transformed )
+			return position * Scale;
+
+		return position * Scale * WorldRotation * WorldScale + WorldPosition;
 	}
 
 	/// <summary>

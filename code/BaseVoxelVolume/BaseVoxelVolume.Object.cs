@@ -2,6 +2,10 @@
 
 partial class BaseVoxelVolume<T, U>
 {
+	/// <summary>
+	/// All of the chunk objects in this volume.
+	/// </summary>
+	protected IReadOnlyDictionary<Chunk, ChunkObject> Objects => _objects;
 	private Dictionary<Chunk, ChunkObject> _objects = new();
 
 	/// <summary>

@@ -12,6 +12,14 @@ public abstract partial class BaseVoxelVolume<T, U> : Component
 	where U : unmanaged
 {
 	/// <summary>
+	/// Our transform matrix, uses the GameObject's World transforms.
+	/// </summary>
+	public Matrix TransformMatrix =>
+		  Matrix.CreateScale( WorldScale )
+		* Matrix.CreateRotation( WorldRotation )
+		* Matrix.CreateTranslation( WorldPosition );
+
+	/// <summary>
 	/// Scale of our voxels.
 	/// </summary>
 	public abstract float Scale { get; }
@@ -68,7 +76,6 @@ public abstract partial class BaseVoxelVolume<T, U> : Component
 		if ( _chunks == null || !_chunks.Any() ) 
 			return;
 
-		Gizmo.Transform = global::Transform.Zero;
 		Gizmo.Draw.Color = Color.Yellow;
 		Gizmo.Draw.LineThickness = 1f;
 
