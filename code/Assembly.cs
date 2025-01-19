@@ -9,6 +9,7 @@ global using System.Threading;
 global using System.Text.Json.Serialization;
 global using System.Buffers;
 global using System.Collections;
+global using System.IO.Compression;
 
 global using Boxfish.Utility;
 
