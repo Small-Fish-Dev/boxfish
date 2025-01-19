@@ -65,13 +65,13 @@ partial class VoxelVolume
 	/// <param name="position"></param>
 	/// <param name="voxel"></param>
 	/// <param name="relative"></param>
-	public void SetTrackedVoxel( Vector3Int position, Voxel voxel, Chunk relative = null )
+	public virtual void SetTrackedVoxel( Vector3Int position, Voxel voxel, Chunk relative = null )
 	{
 		// Get local position to a chunk, set the voxel.
 		var pos = GetLocalSpace( position.x, position.y, position.z, out var chunk, relative );
 		if ( chunk is null )
 		{
-			if ( !IsValidVoxel( voxel ) )
+			if ( !voxel.Valid )
 				return;
 
 			chunk = GetOrCreateChunk( position, pos, relative );
@@ -87,8 +87,8 @@ partial class VoxelVolume
 		chunk.SetVoxel( pos.x, pos.y, pos.z, voxel );
 
 		// Track change.
-		var prevValid = IsValidVoxel( previous );
-		var newValid = IsValidVoxel( voxel );
+		var prevValid = previous.Valid;
+		var newValid = voxel.Valid;
 		var changed = (!prevValid && newValid) || (prevValid && !newValid);
 		TrackChange( chunk, changed, pos );
 	}
