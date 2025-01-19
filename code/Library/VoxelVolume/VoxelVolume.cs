@@ -87,7 +87,7 @@ public partial class VoxelVolume
 				SetAttributes( sceneObject.Attributes );
 
 			var body = obj.Body;
-			if ( body.IsValid() );
+			if ( body.IsValid() )
 				body.Transform = WorldTransform;
 		}
 	}
