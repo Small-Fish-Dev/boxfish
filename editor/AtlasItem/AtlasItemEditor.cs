@@ -107,9 +107,9 @@ public class AtlasItemEditor : ControlWidget
 		var scale = (float)DISPLAY_SIZE / size;
 
 		Paint.SetBrush( pixmap );
-		Paint.Translate( -(Vector2)region.Position );
+		Paint.Translate( Vector2.Up * (Height - region.Size * scale) + new Vector2( 8, -8 ) );
 		Paint.Scale( scale, scale );
-		Paint.Translate( new Vector2( 16, Height - size - 8 ) );
+		Paint.Translate( -(Vector2)region.Position );
 
 		{
 			var isSingularFace = region.Width == region.Height;

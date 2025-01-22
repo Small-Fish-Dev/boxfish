@@ -131,7 +131,7 @@ public sealed class AtlasResource : GameResource
 			for ( int j = 0; j < h; j++ )
 			{
 				var index = (y + i) * dataWidth + (x + j);
-				region[position++] = data[index];
+				region[position++] = data.ElementAtOrDefault( index );
 			}
 
 		return region;
