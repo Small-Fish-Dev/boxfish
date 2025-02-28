@@ -9,7 +9,7 @@ You should aim to use the `VoxelVolume` or `NetworkedVoxelVolume` components, if
 
 #### Example
 
-You can view examples of how to use the library on this [GitHub page](https://github.com/Small-Fish-Dev/boxfish-example/tree/main), or see the library action on [sbox.game](https://sbox.game/fish/boxfish-example).
+You can view examples of how to use the library on this [GitHub page](https://github.com/Small-Fish-Dev/boxfish-example/tree/main), or see the library in action on [sbox.game](https://sbox.game/fish/boxfish-example).
 
 #### Issues
 
