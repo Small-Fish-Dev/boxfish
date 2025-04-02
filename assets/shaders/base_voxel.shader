@@ -5,12 +5,8 @@ FEATURES
 
 MODES
 {
-	VrForward();
-
+	Forward();
 	Depth( S_MODE_DEPTH );
-
-	ToolsWireframe( "vr_tools_wireframe.shader" );
-	ToolsShadingComplexity( "tools_shading_complexity.shader" );
 }
 
 COMMON
